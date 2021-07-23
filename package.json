@@ -1,0 +1,19 @@
+{
+  "name": "juxtaposed",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavelmfateev/juxtaposed.git"
+  },
+  "author": "Pavel Fateev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pavelmfateev/juxtaposed/issues"
+  },
+  "homepage": "https://github.com/pavelmfateev/juxtaposed#readme"
+}
