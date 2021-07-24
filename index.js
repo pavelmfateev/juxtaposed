@@ -15,6 +15,13 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+// **********************************
+// NEW - renders a form
+// **********************************
+app.get("/new", (req, res) => {
+  res.render("new");
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
