@@ -1,0 +1,50 @@
+<% layout('layouts/boilerplate')%>
+
+  <div class="container mt-3">
+    <div class="d-inline-flex">
+      <h1 class="flex-grow-1">Reviews</h1>
+    </div>
+
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Date</th>
+          <th scope="col">Comment</th>
+          <th scope="col">Total</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row"></th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>
+            <div class="btn-group" role="group">
+              <a
+                class="btn btn-success btn-sm"
+                href=""
+                role="button"
+                >Edit</a
+              >
+              <form
+                method="POST"
+                action=""
+                class="form-inline"
+              >
+                <button type="submit" class="btn btn-danger btn-sm ms-1">
+                  Delete
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <a class="btn btn-lg btn-primary" href="/checklists/new" role="button"
+        >Add new</a
+      >
+  </div>
+

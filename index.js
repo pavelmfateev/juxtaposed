@@ -16,10 +16,17 @@ app.get("/", (req, res) => {
 });
 
 // **********************************
+// INDEX - renders multiple reviews
+// **********************************
+app.get("/reviews", async (req, res) => {
+  res.render("reviews/index");
+});
+
+// **********************************
 // NEW - renders a form
 // **********************************
-app.get("/new", (req, res) => {
-  res.render("new");
+app.get("reviews/new", (req, res) => {
+  res.render("reviews/new");
 });
 
 app.listen(port, () => {
