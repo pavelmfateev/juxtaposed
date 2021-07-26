@@ -2,7 +2,8 @@ const express = require("express"),
   app = express(),
   path = require("path"),
   port = 3000,
-  ejsMate = require("ejs-mate");
+  ejsMate = require("ejs-mate"),
+  axios = require('axios').default;;
 
 app.use(express.static(path.join(__dirname, "public")));
 // Views folder and EJS setup:
@@ -25,9 +26,15 @@ app.get("/reviews", async (req, res) => {
 // **********************************
 // NEW - renders a form
 // **********************************
-app.get("reviews/new", (req, res) => {
+app.get("/reviews/new", (req, res) => {
   res.render("reviews/new");
 });
+
+// **********************************
+// SPOTIFY
+// **********************************
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
