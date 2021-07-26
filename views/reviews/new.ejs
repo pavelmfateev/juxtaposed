@@ -1,5 +1,19 @@
 <% layout('layouts/boilerplate')%>
 <div class="container">
   <div class="container bg-light p-4">
-    
+    <h1 class="mb-4">Search Spotify</h1>
+    <form class="d-flex d-none">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <select class="form-select form-select-sm w-50" aria-label="">
+        <option selected>By artist</option>
+        <option value="1">By album </option>
+      </select>
+      <button class="btn btn-outline-success ms-2" type="submit">Search</button>
+    </form>
+    <form class="d-flex my-4">
+      <input class="form-control me-2" type="search" placeholder="ClientID" aria-label="Search">
+      <input class="form-control me-2" type="search" placeholder="ClientSecret" aria-label="Search">
+      <button class="btn btn-outline-success ms-2" type="submit">Send</button>
+    </form>
+    <h1 class="my-4">Upload your own</h1>
 </div>
