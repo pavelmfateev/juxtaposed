@@ -17,11 +17,11 @@
   },
   "homepage": "https://github.com/pavelmfateev/juxtaposed#readme",
   "dependencies": {
-    "axios": "^0.21.1",
     "ejs": "^3.1.6",
     "ejs-mate": "^3.0.0",
     "express": "^4.17.1",
     "method-override": "^3.0.0",
-    "mongoose": "^5.13.3"
+    "mongoose": "^5.13.3",
+    "spotify-web-api-node": "^5.0.2"
   }
 }

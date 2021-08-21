@@ -1,0 +1,41 @@
+<% layout('layouts/boilerplate')%>
+<div class="container">
+  <div class="container bg-light p-4">
+    <h1 class="mb-4">Search Spotify</h1>
+    <form class="d-flex" action="/spotify/search" method="POST">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+        id="searchString"
+        name="searchString"
+      />
+      <select
+        class="form-select form-select-sm w-50"
+        aria-label=""
+        name="searchBy"
+      >
+        <option name="artist" value="artist" selected>By artist</option>
+        <option name="album" value="album">By album</option>
+      </select>
+      <button class="btn btn-outline-success ms-2" type="submit">Search</button>
+    </form>
+    <h1 class="my-4 d-none">Upload your own</h1>
+  </div>
+  </div>
+  <div class="row row-cols-1 row-cols-md-2 g-4 justify-content-center my-3">
+    <% for(const element of searchResults){%>
+    <div class="col" style="max-width: 300px;">
+      <div class="card">
+        <a href="#">
+        <img src="<%=element.images[1].url%>" class="card-img-top">
+        </a>
+        <div class="card-body">
+          <h5 class="card-title"><%=element.name%></h5>
+        </div>
+      </div>
+    </div>
+    <%}%>
+    </div>
+</div>
