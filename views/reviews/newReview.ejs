@@ -1,0 +1,58 @@
+<% layout('layouts/boilerplate')%>
+<div class="container mb-5 w-50">
+  <div class="row mb-4 bg-light">
+    <img src="<%=img%>" class="w-75 mx-auto" />
+  </div>
+  <div class="row">
+    <form action="/reviews" method="POST">
+      <div class="accordion" id="accordionExample">
+        <% let inc = 1%>
+        <%for(const element of gradingParameters){%>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading<%=inc%>">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse<%=inc%>"
+              aria-expanded="false"
+              aria-controls="collapse<%=inc%>"
+            >
+              <%= element.name %>
+            </button>
+          </h2>
+          <div
+            id="collapse<%=inc%>"
+            class="accordion-collapse collapse"
+            aria-labelledby="heading<%=inc%>"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              <%for(const param of element.parameters){%>
+              <div class="form-group">
+                <p><%=param%></p>
+                <%for(let i = 1; i < 6; i++){%>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="<%=param%>_<%=i%>"
+                    name="<%=param%>"
+                    value="<%=i%>"
+                    required
+                  />
+                  <label class="form-check-label" for="<%=param%>"><%=i%></label>
+                </div>
+                <%}%>
+              </div>
+              <%}%>
+            </div>
+          </div>
+        </div>
+        <%inc++%>
+        <%}%>
+      </div>
+      <button class="btn btn-lg btn-primary my-3 mx-auto" type="submit">Submit</button>
+    </form>
+  </div>
+</div>

@@ -12,7 +12,7 @@
         name="searchString"
       />
       <select
-        class="form-select form-select-sm w-50"
+        class="form-select form-select-sm w-50 d-none"
         aria-label=""
         name="searchBy"
       >
@@ -28,7 +28,7 @@
     <% for(const element of searchResults){%>
     <div class="col" style="max-width: 300px;">
       <div class="card">
-        <a href="#">
+        <a href="/reviews/addnew?img=<%=element.images[1].url%>&albumName=<%=encodeURIComponent(element.name)%>">
         <img src="<%=element.images[1].url%>" class="card-img-top">
         </a>
         <div class="card-body">

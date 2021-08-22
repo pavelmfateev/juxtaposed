@@ -3,7 +3,8 @@ const express = require("express"),
   path = require("path"),
   port = 3000,
   ejsMate = require("ejs-mate"),
-  SpotifyWebApi = require("spotify-web-api-node");
+  SpotifyWebApi = require("spotify-web-api-node"),
+  qs = require("qs");
 
 //To parse form data in POST request body:
 app.use(express.urlencoded({ extended: true }));
@@ -32,6 +33,48 @@ app.get("/reviews", async (req, res) => {
 // **********************************
 app.get("/reviews/new", (req, res) => {
   res.render("reviews/new");
+});
+const gradingParameters = [
+  {
+    name: "Production Value",
+    parameters: ["Mixing", "Instrumentation", "Vocal"],
+  },
+  {
+    name: "Album Composition",
+    parameters: ["Length", "Versatility", "Consistency", "Concept"],
+  },
+  { name: "Performance", parameters: ["Vocal", "Instrumental"] },
+  {
+    name: "Songwriting",
+    parameters: ["Lyrics", "Melody", "Harmony", "Originality", "Hooks"],
+  },
+];
+// **********************************
+// NEW REVIEW
+// **********************************
+app.get("/reviews/addnew", (req, res) => {
+  const { img, albumName } = req.query;
+  res.render("reviews/newReview", { img, albumName, gradingParameters });
+});
+
+app.post("/reviews", (req, res) => {
+  // console.log(req.body);
+  const {
+    Mixing: mixing,
+    Instrumentation: instrumentation,
+    Length: length,
+    Versatility: versatility,
+    Consistency: consistency,
+    Concept: concept,
+    Vocal: vocal,
+    Instrumental: instrumental,
+    Lyrics: lyrics,
+    Melody: melody,
+    Harmony: harmony,
+    Originality: originality,
+    Hooks: hooks,
+  } = req.body;
+  res.redirect("/");
 });
 
 // **********************************
@@ -119,18 +162,23 @@ app.get("/spotify", (req, res) => {
 app.post("/spotify/search", (req, res) => {
   const { searchString, searchBy } = req.body;
   let searchResults = [];
-  spotifyApi.searchAlbums(searchString).then(
-    (data) => {
-      searchResults = data.body.albums.items;
-    },
-    (err) => {
-      console.error(err);
-    }
-  ).then(()=>{
-    res.render("reviews/searchResults", {searchResults});
-  });
+  spotifyApi
+    .searchAlbums(searchString)
+    .then(
+      (data) => {
+        // for (const element of data.body.albums.items) {
+        //   console.log(element);
+        // }
+        searchResults = data.body.albums.items;
+      },
+      (err) => {
+        console.error(err);
+      }
+    )
+    .then(() => {
+      res.render("reviews/searchResults", { searchResults });
+    });
 });
-
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
