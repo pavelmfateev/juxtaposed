@@ -4,7 +4,20 @@ const express = require("express"),
   port = 3000,
   ejsMate = require("ejs-mate"),
   SpotifyWebApi = require("spotify-web-api-node"),
-  qs = require("qs");
+  qs = require("qs"),
+  mongoose = require("mongoose"),
+  Review = require("./models/review")
+
+mongoose.set("useFindAndModify", false);
+mongoose.connect("mongodb://localhost:27017/juxtaposed", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+  console.log("Database connected");
+});
 
 //To parse form data in POST request body:
 app.use(express.urlencoded({ extended: true }));
@@ -37,13 +50,13 @@ app.get("/reviews/new", (req, res) => {
 const gradingParameters = [
   {
     name: "Production Value",
-    parameters: ["Mixing", "Instrumentation", "Vocal"],
+    parameters: ["Mixing", "Instrumentation", "Vocal production"],
   },
   {
     name: "Album Composition",
     parameters: ["Length", "Versatility", "Consistency", "Concept"],
   },
-  { name: "Performance", parameters: ["Vocal", "Instrumental"] },
+  { name: "Performance", parameters: ["Vocal performance", "Instrumental"] },
   {
     name: "Songwriting",
     parameters: ["Lyrics", "Melody", "Harmony", "Originality", "Hooks"],
@@ -57,24 +70,63 @@ app.get("/reviews/addnew", (req, res) => {
   res.render("reviews/newReview", { img, albumName, gradingParameters });
 });
 
-app.post("/reviews", (req, res) => {
+app.post("/reviews", async (req, res, next) => {
   // console.log(req.body);
-  const {
-    Mixing: mixing,
-    Instrumentation: instrumentation,
-    Length: length,
-    Versatility: versatility,
-    Consistency: consistency,
-    Concept: concept,
-    Vocal: vocal,
-    Instrumental: instrumental,
-    Lyrics: lyrics,
-    Melody: melody,
-    Harmony: harmony,
-    Originality: originality,
-    Hooks: hooks,
-  } = req.body;
-  res.redirect("/");
+  try {
+    const results = {
+      Mixing: mixing,
+      Instrumentation: instrumentation,
+      'Vocal production': vocalProd,
+      Length: length,
+      Versatility: versatility,
+      Consistency: consistency,
+      Concept: concept,
+      'Vocal performance': vocalPerf,
+      Instrumental: instrumental,
+      Lyrics: lyrics,
+      Melody: melody,
+      Harmony: harmony,
+      Originality: originality,
+      Hooks: hooks,
+    } = req.body;
+    console.log(results);
+    
+    let resultsArray = [];
+let itr = 0;
+for(const element in results){
+    resultsArray[itr] = {subcategory: element, grade: results[element]};
+    itr++;
+}
+
+    let newReview = {
+      dateAdded: new Date(),
+      grades:[],
+      total: 0
+    }
+    
+    // let grades = [];
+    let resultsItr = 0;
+    for(let i = 0; i < gradingParameters.length; i++){
+            newReview.grades[i] = {
+          category: gradingParameters[i].name,
+          parameters: []
+        };
+        for(let j = 0; j < gradingParameters[i].parameters.length; j++){
+            newReview.grades[i].parameters[j] = {
+                name: resultsArray[resultsItr].subcategory,
+                grade: resultsArray[resultsItr].grade
+            }
+            resultsItr++;
+        }
+    }
+
+    // newChecklist.total = numTotal(newChecklist.answers);
+    const createReview = new Review(newReview);
+    await createReview.save();
+    res.redirect("/");
+  } catch (e) {
+    next(e);
+  }
 });
 
 // **********************************
