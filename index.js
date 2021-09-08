@@ -6,7 +6,7 @@ const express = require("express"),
   SpotifyWebApi = require("spotify-web-api-node"),
   qs = require("qs"),
   mongoose = require("mongoose"),
-  Review = require("./models/review")
+  Review = require("./models/review");
 
 mongoose.set("useFindAndModify", false);
 mongoose.connect("mongodb://localhost:27017/juxtaposed", {
@@ -66,58 +66,82 @@ const gradingParameters = [
 // NEW REVIEW
 // **********************************
 app.get("/reviews/addnew", (req, res) => {
-  const { img, albumName } = req.query;
-  res.render("reviews/newReview", { img, albumName, gradingParameters });
+  const { img, albumName, releaseDate, artistName, albumUri } = req.query;
+  let re = /\w{8,}/;
+  let id = re.exec(albumUri);
+  let albumTracks = null;
+  spotifyApi
+    .getAlbum(id[0])
+    .then(
+      (data) => {
+        // console.log('Album information', data.body.tracks.items);
+        albumTracks = data.body.tracks.items;
+      },
+      (err) => {
+        console.error(err);
+      }
+    )
+    .then(() => {
+      res.render("reviews/newReview", {
+        img,
+        albumName,
+        releaseDate,
+        artistName,
+        albumUri,
+        gradingParameters,
+        albumTracks,
+      });
+    });
 });
 
 app.post("/reviews", async (req, res, next) => {
-  // console.log(req.body);
+  console.log(req.body);
   try {
-    const results = {
+    const results = ({
       Mixing: mixing,
       Instrumentation: instrumentation,
-      'Vocal production': vocalProd,
+      "Vocal production": vocalProd,
       Length: length,
       Versatility: versatility,
       Consistency: consistency,
       Concept: concept,
-      'Vocal performance': vocalPerf,
+      "Vocal performance": vocalPerf,
       Instrumental: instrumental,
       Lyrics: lyrics,
       Melody: melody,
       Harmony: harmony,
       Originality: originality,
       Hooks: hooks,
-    } = req.body;
-    console.log(results);
-    
+    } = req.body);
+    // console.log(results);
+
     let resultsArray = [];
-let itr = 0;
-for(const element in results){
-    resultsArray[itr] = {subcategory: element, grade: results[element]};
-    itr++;
-}
+    let itr = 0;
+    for (const element in results) {
+      resultsArray[itr] = { subcategory: element, grade: results[element] };
+      itr++;
+    }
 
     let newReview = {
       dateAdded: new Date(),
-      grades:[],
-      total: 0
-    }
-    
+      grades: [],
+      total: 0,
+    };
+
     // let grades = [];
     let resultsItr = 0;
-    for(let i = 0; i < gradingParameters.length; i++){
-            newReview.grades[i] = {
-          category: gradingParameters[i].name,
-          parameters: []
+    for (let i = 0; i < gradingParameters.length; i++) {
+      newReview.grades[i] = {
+        category: gradingParameters[i].name,
+        parameters: [],
+      };
+      for (let j = 0; j < gradingParameters[i].parameters.length; j++) {
+        newReview.grades[i].parameters[j] = {
+          name: resultsArray[resultsItr].subcategory,
+          grade: resultsArray[resultsItr].grade,
         };
-        for(let j = 0; j < gradingParameters[i].parameters.length; j++){
-            newReview.grades[i].parameters[j] = {
-                name: resultsArray[resultsItr].subcategory,
-                grade: resultsArray[resultsItr].grade
-            }
-            resultsItr++;
-        }
+        resultsItr++;
+      }
     }
 
     // newChecklist.total = numTotal(newChecklist.answers);
@@ -218,9 +242,9 @@ app.post("/spotify/search", (req, res) => {
     .searchAlbums(searchString)
     .then(
       (data) => {
-        // for (const element of data.body.albums.items) {
-        //   console.log(element);
-        // }
+        for (const element of data.body.albums.items) {
+          // console.log(element);
+        }
         searchResults = data.body.albums.items;
       },
       (err) => {
@@ -228,6 +252,7 @@ app.post("/spotify/search", (req, res) => {
       }
     )
     .then(() => {
+      // console.log(searchResults);
       res.render("reviews/searchResults", { searchResults });
     });
 });
