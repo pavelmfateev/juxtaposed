@@ -5,6 +5,10 @@ const reviewSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  albumName: String,
+  artistName: String,
+  release_date: Date,
+  tracks:[String],
   grades: [{
     _id: false,
     category: { type: String, maxLength: 50 },
