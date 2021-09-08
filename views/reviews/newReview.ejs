@@ -1,13 +1,13 @@
 <% layout('layouts/boilerplate')%>
 <div class="container mb-5 w-50">
-  <div class="row mb-4 bg-light">
+  <div class="row mb-3 bg-light">
     <img src="<%=img%>" class="w-75 mx-auto" />
   </div>
+  <h4 class="mb-3">Grading Parameters</h4>
   <div class="row">
     <form action="/reviews" method="POST">
-      <div class="accordion" id="accordionExample">
-        <% let inc = 1%>
-        <%for(const element of gradingParameters){%>
+      <div class="accordion" id="accordionGrading">
+        <% let inc = 1%> <%for(const element of gradingParameters){%>
         <div class="accordion-item">
           <h2 class="accordion-header" id="heading<%=inc%>">
             <button
@@ -25,13 +25,13 @@
             id="collapse<%=inc%>"
             class="accordion-collapse collapse"
             aria-labelledby="heading<%=inc%>"
-            data-bs-parent="#accordionExample"
+            data-bs-parent="#accordionGrading"
           >
             <div class="accordion-body">
               <%for(const param of element.parameters){%>
               <div class="form-group">
                 <p><%=param%></p>
-                <%for(let i = 1; i < 6; i++){%>
+                <%for(let i = 1; i < 11; i++){%>
                 <div class="form-check form-check-inline">
                   <input
                     class="form-check-input"
@@ -41,7 +41,9 @@
                     value="<%=i%>"
                     required
                   />
-                  <label class="form-check-label" for="<%=param%>"><%=i%></label>
+                  <label class="form-check-label" for="<%=param%>"
+                    ><%=i%></label
+                  >
                 </div>
                 <%}%>
               </div>
@@ -49,10 +51,49 @@
             </div>
           </div>
         </div>
-        <%inc++%>
-        <%}%>
+        <%inc++%> <%}%>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingFive">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseFive"
+              aria-expanded="false"
+              aria-controls="collapseFive"
+            >
+              Notable Songs
+            </button>
+          </h2>
+          <div
+            id="collapseFive"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingFive"
+            data-bs-parent="#accordionGrading"
+          >
+            <div class="accordion-body">
+              <%for(let i = 0; i < 3; i++){%>
+              <div class="input-group my-3">
+                <label
+                  class="input-group-text"
+                  for="inputGroupSelectTrack<%=i+1%>"
+                  >Song #<%=i+1%></label
+                >
+                <select class="form-select" id="inputGroupSelectTrack<%=i+1%>">
+                  <option selected>Choose...</option>
+                  <%for(const track of albumTracks){%>
+                  <option value="<%=track.name%>"><%=track.name%></option>
+                  <%}%>
+                </select>
+                <%}%>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <button class="btn btn-lg btn-primary my-3 mx-auto" type="submit">Submit</button>
+      <button class="btn btn-lg btn-primary my-3 mx-3" type="submit">
+        Submit
+      </button>
     </form>
   </div>
 </div>
