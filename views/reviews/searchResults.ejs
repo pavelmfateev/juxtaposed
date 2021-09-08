@@ -28,7 +28,7 @@
     <% for(const element of searchResults){%>
     <div class="col" style="max-width: 300px;">
       <div class="card">
-        <a href="/reviews/addnew?img=<%=element.images[1].url%>&albumName=<%=encodeURIComponent(element.name)%>">
+        <a href="/reviews/addnew?img=<%=element.images[0].url%>&albumName=<%=encodeURIComponent(element.name)%>&releaseDate=<%=element.release_date%>&artistName=<%=element.artists[0].name%>&albumUri=<%=element.uri%>">
         <img src="<%=element.images[1].url%>" class="card-img-top">
         </a>
         <div class="card-body">
