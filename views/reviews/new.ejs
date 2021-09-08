@@ -1,5 +1,26 @@
 <% layout('layouts/boilerplate')%>
 <div class="container">
   <div class="container bg-light p-4">
-    
+    <h1 class="mb-4">Search Spotify</h1>
+    <form class="d-flex" action="/spotify/search" method="POST">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+        id="searchString"
+        name="searchString"
+      />
+      <select
+        class="form-select form-select-sm w-50"
+        aria-label=""
+        name="searchBy"
+      >
+        <option name="artist" value="artist" selected>By artist</option>
+        <option name="album" value="album">By album</option>
+      </select>
+      <button class="btn btn-outline-success ms-2" type="submit">Search</button>
+    </form>
+    <h1 class="my-4 d-none">Upload your own</h1>
+  </div>
 </div>
