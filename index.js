@@ -74,7 +74,6 @@ app.get("/reviews/addnew", (req, res) => {
     .getAlbum(id[0])
     .then(
       (data) => {
-        // console.log('Album information', data.body.tracks.items);
         albumTracks = data.body.tracks.items;
       },
       (err) => {
@@ -87,7 +86,7 @@ app.get("/reviews/addnew", (req, res) => {
         albumName,
         releaseDate,
         artistName,
-        albumUri,
+        albumUri: id,
         gradingParameters,
         albumTracks,
       });
@@ -95,8 +94,26 @@ app.get("/reviews/addnew", (req, res) => {
 });
 
 app.post("/reviews", async (req, res, next) => {
-  console.log(req.body);
   try {
+    const {
+      song1,
+      song2,
+      song3,
+      albumName,
+      artistName,
+      releaseDate,
+      albumUri,
+      albumComments
+    } = req.body;
+    delete req.body.song1;
+    delete req.body.song2;
+    delete req.body.song3;
+    delete req.body.albumName;
+    delete req.body.artistName;
+    delete req.body.releaseDate;
+    delete req.body.albumUri;
+    delete req.body.albumComments;
+
     const results = ({
       Mixing: mixing,
       Instrumentation: instrumentation,
@@ -113,7 +130,6 @@ app.post("/reviews", async (req, res, next) => {
       Originality: originality,
       Hooks: hooks,
     } = req.body);
-    // console.log(results);
 
     let resultsArray = [];
     let itr = 0;
@@ -124,27 +140,48 @@ app.post("/reviews", async (req, res, next) => {
 
     let newReview = {
       dateAdded: new Date(),
+      albumName: albumName,
+      artistName: artistName,
+      release_date: releaseDate,
+      albumUri: albumUri,
+      tracks: [],
       grades: [],
       total: 0,
+      comment: albumComments
     };
-
-    // let grades = [];
+    const tracks = [song1, song2, song3];
+    for (let i = 0; i < 3; i++) {
+      if (tracks[i] != "Choose...") {
+        newReview.tracks.push(tracks[i]);
+      }
+    }
     let resultsItr = 0;
     for (let i = 0; i < gradingParameters.length; i++) {
+      let categoryGrade = 0;
       newReview.grades[i] = {
         category: gradingParameters[i].name,
         parameters: [],
+        categoryTotal: 0,
       };
+      let numberReplies = 0;
       for (let j = 0; j < gradingParameters[i].parameters.length; j++) {
         newReview.grades[i].parameters[j] = {
           name: resultsArray[resultsItr].subcategory,
           grade: resultsArray[resultsItr].grade,
         };
+        let parsedResult = parseInt(resultsArray[resultsItr].grade);
+        if (parsedResult > -1) {
+          categoryGrade += parsedResult;
+          numberReplies++;
+        }
         resultsItr++;
+        if (j == gradingParameters[i].parameters.length - 1) {
+          newReview.grades[i].parameters[j].categoryTotal =
+            (categoryGrade / ((numberReplies) * 10)) * 25;
+          newReview.total += newReview.grades[i].parameters[j].categoryTotal;
+        }
       }
     }
-
-    // newChecklist.total = numTotal(newChecklist.answers);
     const createReview = new Review(newReview);
     await createReview.save();
     res.redirect("/");

@@ -8,6 +8,7 @@ const reviewSchema = new mongoose.Schema({
   albumName: String,
   artistName: String,
   release_date: Date,
+  albumUri: String,
   tracks:[String],
   grades: [{
     _id: false,
@@ -20,6 +21,7 @@ const reviewSchema = new mongoose.Schema({
     categoryTotal: Number
   }],
   total: Number,
+  comment: { type: String, maxLength: 100 }
 });
 
 module.exports = mongoose.model("Review", reviewSchema);
